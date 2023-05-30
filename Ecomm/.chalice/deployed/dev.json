@@ -1,5 +1,28 @@
 {
-  "resources": [],
+  "resources": [
+    {
+      "name": "default-role",
+      "resource_type": "iam_role",
+      "role_arn": "arn:aws:iam::000000000000:role/Ecomm-dev",
+      "role_name": "Ecomm-dev"
+    },
+    {
+      "name": "first_function",
+      "resource_type": "lambda_function",
+      "lambda_arn": "arn:aws:lambda:us-east-1:000000000000:function:Ecomm-dev-first_function"
+    },
+    {
+      "name": "api_handler",
+      "resource_type": "lambda_function",
+      "lambda_arn": "arn:aws:lambda:us-east-1:000000000000:function:Ecomm-dev"
+    },
+    {
+      "name": "rest_api",
+      "resource_type": "rest_api",
+      "rest_api_id": "qbndweyslt",
+      "rest_api_url": "https://qbndweyslt.execute-api.us-east-1.amazonaws.com/api/"
+    }
+  ],
   "schema_version": "2.0",
   "backend": "api"
 }
