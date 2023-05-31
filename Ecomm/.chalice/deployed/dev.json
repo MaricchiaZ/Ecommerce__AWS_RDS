@@ -19,8 +19,8 @@
     {
       "name": "rest_api",
       "resource_type": "rest_api",
-      "rest_api_id": "qbndweyslt",
-      "rest_api_url": "https://qbndweyslt.execute-api.us-east-1.amazonaws.com/api/"
+      "rest_api_id": "li30da3sek",
+      "rest_api_url": "https://li30da3sek.execute-api.us-east-1.amazonaws.com/api/"
     }
   ],
   "schema_version": "2.0",

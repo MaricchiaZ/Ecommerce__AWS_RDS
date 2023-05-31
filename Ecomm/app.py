@@ -29,3 +29,8 @@ def get_order(ID):
     cursor = conn.cursor()
     cursor.execute("SELECT * FROM orders;")
     return {"hello": cursor.fetchall()}
+
+
+
+# https://cuwgd8cwng.execute-api.us-east-1.amazonaws.com/api/
+# https://li30da3sek.execute-api.localhost.localstack.cloud:4566/api/order/1
