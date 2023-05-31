@@ -66,7 +66,8 @@ Devemos criar o banco de dados\
 `awslocal rds create-db-instance --master-username user --master-user-password pass --db-instance-identifier mydb --engine postgres --db-name database --db-instance-class db.t3.small`
 
 Agora você pode se conectar ao banco de dados PostgreSQL usando um cliente de banco de dados ou uma biblioteca de programação. Use o host localhost, a porta 4510, o nome de usuário postgres e a senha para se conectar ao banco de dados.
-`psql -d database -U user -p 4510 -h localhost -W`
+`psql -d database -U user -p 4510 -h localhost -W`\
+A senha é `pass` e o usuário caso necessário é `user`
 
 Se quiser sair do banco de dados use:\
 ```sql
@@ -117,6 +118,11 @@ Para exibir todos os registros de uma tabela
 SELECT * FROM livros;
 ```
 
+Para exibir os registros de uma tabela, filtrando por um parâmetro específico
+```sql
+SELECT * FROM orders WHERE id=1;
+```
+
 Deletando linhas de uma tabela
 ```sql
 DELETE from livros WHERE id=1;
@@ -153,3 +159,18 @@ UPDATE livros SET disponivel=1 WHERE id=19;
   # https://qr0vyeldur.execute-api.localhost.localstack.cloud:4566/api/order
 
   https://www.alura.com.br/artigos/como-utilizar-os-comandos-insert-select-update-e-delete-em-sql#:~:text=INSERT%20-%20Inserindo%20dados%20na%20tabela,-Para%20isso%2C%20eu&text=Para%20usar%20o%20INSERT%20devemos,que%20ser%C3%A3o%20inseridos%20nas%20colunas
+
+
+
+## Extra:
+
+### Comandos amigos:
+
+Para listar todas as funções lambdas
+`awslocal lambda list-functions | grep FunctionName`
+
+Para passar algum parâmetro para uma funçao lambda específica
+`echo '{"ID":"1053"}' | chalice-local invoke -n get_order`
+
+Para logar nos serviços pagos da Localsatck
+`export LOCALSTACK_API_KEY=sua_key`  Essa key você pega na sua página de usuário da localstak
