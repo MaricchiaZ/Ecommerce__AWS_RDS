@@ -47,38 +47,55 @@ Com essa função criada, faremos modificações nela para atender as nossas nec
 
 Ecolhemos o banco de dados Postgres por ser compatível com o Localstack e ter uma boa base de documentação de como utilizá-lo.
 
-Pré-requisitos:
+### Pré-requisitos:
+<br>
+Biblioteca psycopg2 local
 
-Biblioteca psycopg2 local\
 `pip3 install psycopg2-binary`
+
+<br>
 
 Cliente postgress para o terminal\
 `sudo apt install postgresql-client`
+
+<br>
 
 Para conectar-se com  banco usaremos a versão já complilada e adaptada da biblioteca psycopg2.
 Para isso, no arquivo "requeriments.txt" escreva:\
 `aws-psycopg2`
 
+<br>
+
 Para listar as instâncias de banco de dados RDS\
 `awslocal rds describe-db-instances`
 
+<br>
+
 Devemos criar o banco de dados\
 `awslocal rds create-db-instance --master-username user --master-user-password pass --db-instance-identifier mydb --engine postgres --db-name database --db-instance-class db.t3.small`
+
+<br>
 
 Agora você pode se conectar ao banco de dados PostgreSQL usando um cliente de banco de dados ou uma biblioteca de programação. Use o host localhost, a porta 4510, o nome de usuário postgres e a senha para se conectar ao banco de dados.
 `psql -d database -U user -p 4510 -h localhost -W`\
 A senha é `pass` e o usuário caso necessário é `user`
 
-Se quiser sair do banco de dados use:\
+<br>
+
+Se quiser sair do banco de dados use:
 ```sql
 exit
 ```
 
+<br>
+
 ... Agora, dentro do banco de dados...
-Para exibir as tabelas que temos\
+Para exibir as tabelas que temos
 ```sql
 \dt
 ```
+
+<br>
 
 Criar a tabela de pedidos
 ```sql
@@ -90,6 +107,8 @@ items INTEGER[] NOT NULL
 );
 ```
 
+<br>
+
 Criar a tabela de items
 ```sql
 CREATE TABLE items ( 
@@ -98,79 +117,144 @@ nome VARCHAR(20) NOT NULL
 );
 ```
 
+<br>
+
 Para deletar uma tabela
 ```sql
 DROP TABLE orders;
 ```
+
+<br>
 
 Para inserir itens na tabela items
 ```sql
 INSERT INTO items (nome) VALUES ('x-salada'), ('misto'), ('hot-dog');
 ```
 
+<br>
+
 Para inserir itens na tabela pedidos
 ```sql
 INSERT INTO orders (status, user_id, items) VALUES ('APROVADO', '1', ARRAY[1, 2]);
 ```
+
+<br>
+
+```sql
+INSERT INTO orders (status, user_id, items) VALUES ('APROVADO', '2', ARRAY[2, 3]);
+```
+
+
+<br>
+
+```sql
+INSERT INTO orders (status, user_id, items) VALUES ('APROVADO', '3', ARRAY[1, 3]);
+```
+
+<br>
 
 Para exibir todos os registros de uma tabela
 ```sql
 SELECT * FROM livros;
 ```
 
+<br>
+
 Para exibir os registros de uma tabela, filtrando por um parâmetro específico
 ```sql
 SELECT * FROM orders WHERE id=1;
 ```
+
+<br>
 
 Deletando linhas de uma tabela
 ```sql
 DELETE from livros WHERE id=1;
 ```
 
+<br>
+
 Para fazer um update em uma linha da tabela
 ```sql
 UPDATE livros SET disponivel=1 WHERE id=19;
 ```
 
+# 3 - Como testar a API: 
 
+### POST
 
-```sql
+`https://x2l6kzsp69.execute-api.localhost.localstack.cloud:4566/api/order/`
 
+#### BODY:
+```json
+{
+  "ID": "1",
+  "items": [
+    1,
+    2
+  ]
+}
 ```
 
-
-```sql
-
+```json
+{
+  "ID": "2",
+  "items": [
+    1,
+    3
+  ]
+}
 ```
 
-
-
-```sql
-
+```json
+{
+  "ID": "3",
+  "items": [
+    1,
+    3,
+    2
+  ]
+}
 ```
 
+<br>
 
+### GET
+`https://x2l6kzsp69.execute-api.localhost.localstack.cloud:4566/api/order/2`
 
-```sql
+<br>
 
+### UPDATE 
+`https://2v3qgzz3sn.execute-api.localhost.localstack.cloud:4566/api/order`
+
+#### BODY:
+```json
+{
+  "ID": "2"
+}
 ```
+<br>
 
-  # https://qr0vyeldur.execute-api.localhost.localstack.cloud:4566/api/order
+### DELETE
+`https://n0q4zv02w2.execute-api.localhost.localstack.cloud:4566/api/order/2`
 
-  https://www.alura.com.br/artigos/como-utilizar-os-comandos-insert-select-update-e-delete-em-sql#:~:text=INSERT%20-%20Inserindo%20dados%20na%20tabela,-Para%20isso%2C%20eu&text=Para%20usar%20o%20INSERT%20devemos,que%20ser%C3%A3o%20inseridos%20nas%20colunas
-
+<br>
+<br>
 
 
 ## Extra:
 
 ### Comandos amigos:
 
-Para listar todas as funções lambdas
+Para listar todas as funções lambdas\
 `awslocal lambda list-functions | grep FunctionName`
 
-Para passar algum parâmetro para uma funçao lambda específica
+Para passar algum parâmetro para uma funçao lambda específica\
 `echo '{"ID":"1053"}' | chalice-local invoke -n get_order`
 
-Para logar nos serviços pagos da Localsatck
+Para logar nos serviços pagos da Localsatck\
 `export LOCALSTACK_API_KEY=sua_key`  Essa key você pega na sua página de usuário da localstak
+
+
+
+
