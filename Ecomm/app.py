@@ -5,27 +5,54 @@ import json
 
 # Um aplicativo Chalice, cria automaticamente a configuração necessária no Amazon API Gateway para expor 
 # suas rotas de API para o mundo externo e rotear as solicitações HTTP recebidas para as funções Lambda correspondentes no backend.
+# fazer uma query(consulta) SQL que substitua o ID pelo nome.
 
+#
 app = Chalice(app_name='Ecomm')
+
+# SELECT orders.id, orders.status, users.nome, orders.items
+# FROM orders
+# JOIN users ON orders.user_id = users.id
+# WHERE orders.id = 3;
 
 # AWS Lambda
 @app.lambda_function()
 def get_order(event, context):
-    id_do_usuario=event['ID']
+    id_user=event['ID']
+#    nome_user=(f"SELECT * FROM users WHERE id={id_do_usuario};")
     conn = psycopg2.connect(database="database",
                         host="host.docker.internal",
                         user="user",
                         password="pass",
                         port="4510")
     cursor = conn.cursor()
-    cursor.execute(f"SELECT * FROM orders WHERE id={id_do_usuario};") #comando que faz a consulta no banco
+    cursor.execute(f"SELECT orders.id, orders.status, users.nome, \
+       ARRAY(SELECT items.nome FROM items WHERE items.id = ANY(orders.items)) as item_nomes\
+        FROM orders JOIN users ON orders.user_id = users.id WHERE orders.id = {id_user};") #comando que faz a consulta no banco
     return {"list orders": cursor.fetchone()}
 # echo '{"ID":"1053"}' | chalice-local invoke -n first_function
 
 
 @app.lambda_function()
+# def new_order(event, context): # itens, user
+#     id_do_usuario=event['ID']
+#     status="PROCESSANDO"
+#     items_pedidos=event['items']
+#     conn = psycopg2.connect(database="database",
+#                         host="host.docker.internal",
+#                         user="user",
+#                         password="pass",
+#                         port="4510")
+#     cursor = conn.cursor()
+#     cursor.execute(f"INSERT INTO orders (status, user_id, items) VALUES ('{status}', {id_do_usuario}, ARRAY{items_pedidos});") #comando que insere um novo pedido no banco
+#     conn.commit()
+#     cursor.close()
+#     conn.close()
+#     return {"new order": "pedido cadastrado com sucesso"}
+
+
 def new_order(event, context): # itens, user
-    id_do_usuario=event['ID']
+    id_do_usuario=event['nome']
     status="PROCESSANDO"
     items_pedidos=event['items']
     conn = psycopg2.connect(database="database",
@@ -34,7 +61,12 @@ def new_order(event, context): # itens, user
                         password="pass",
                         port="4510")
     cursor = conn.cursor()
-    cursor.execute(f"INSERT INTO orders (status, user_id, items) VALUES ('{status}', {id_do_usuario}, ARRAY{items_pedidos});") #comando que insere um novo pedido no banco
+    # cursor.execute(f"INSERT INTO orders (status, user_id, items) VALUES ('{status}', {id_do_usuario}, ARRAY{items_pedidos});") #comando que insere um novo pedido no banco
+    cursor.execute(f"WITH user_info AS (SELECT id FROM users WHERE nome = '{id_do_usuario}'),\
+    insert_user AS (INSERT INTO users (nome) SELECT '{id_do_usuario}'\
+    WHERE NOT EXISTS (SELECT 1 FROM user_info) RETURNING id)\
+    INSERT INTO orders (status, user_id, items) SELECT '{status}',\
+    COALESCE((SELECT id FROM user_info), (SELECT id FROM insert_user)), ARRAY{items_pedidos};")
     conn.commit()
     cursor.close()
     conn.close()
@@ -102,9 +134,7 @@ def update_an_order():
                            Payload=json_payload)
     return json.load(result['Payload'])
 # echo '{"ID":"5"}' | chalice-local invoke -n update_status
-# https://2v3qgzz3sn.execute-api.localhost.localstack.cloud:4566/api/order
-
-
+# https://mmwdi1i8c3.execute-api.localhost.localstack.cloud:4566/api/order
 
 @app.route("/order/{ID}", methods=['GET'])
 def get_order_api(ID):
@@ -134,7 +164,7 @@ def receive_an_order():
     result = client.invoke(FunctionName='Ecomm-dev-new_order',
                            Payload=json_payload)
     return json.load(result['Payload'])
-# https://x2l6kzsp69.execute-api.localhost.localstack.cloud:4566/api/order
+# https://e0f0uaiay3.execute-api.localhost.localstack.cloud:4566/api/order
 
 
 

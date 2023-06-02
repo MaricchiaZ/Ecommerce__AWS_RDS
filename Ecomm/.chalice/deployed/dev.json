@@ -34,8 +34,8 @@
     {
       "name": "rest_api",
       "resource_type": "rest_api",
-      "rest_api_id": "n0q4zv02w2",
-      "rest_api_url": "https://n0q4zv02w2.execute-api.us-east-1.amazonaws.com/api/"
+      "rest_api_id": "hmz6kpm4ib",
+      "rest_api_url": "https://hmz6kpm4ib.execute-api.us-east-1.amazonaws.com/api/"
     }
   ],
   "schema_version": "2.0",
