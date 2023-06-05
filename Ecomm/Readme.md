@@ -1,4 +1,4 @@
-## Desafio da Semana: 
+## Desafio da Semana:
 
 Fazer um sistema de e-commerce com itens, clientes (com dados), pedidos e status.
 - Usando AWS Lambda
@@ -6,7 +6,7 @@ Fazer um sistema de e-commerce com itens, clientes (com dados), pedidos e status
 - Pede-se um cuidado com a modelagem.
 
 ### Equipe:
-Estamos nos aventurando pelo mundo do AWS_SAM por demanda do Labs42_jan23 em parceria com o Itaú. 
+Estamos nos aventurando pelo mundo do AWS_SAM por demanda do Labs42_jan23 em parceria com o Itaú.
 Projeto feito pela equipe: Welton (wleite), Gabriel (gissao-m) e Maria Clara (maclara-).
 
 ### Pré-requisito:
@@ -16,7 +16,7 @@ Abra o docker desktop...\
 Já no VsCode inicialize o container:\
 `localstack start -d`
 
-# 1 - Iniciando um projeto com o Chalice: 
+# 1 - Iniciando um projeto com o Chalice:
 
 `chalice-local new-project`
 
@@ -26,16 +26,16 @@ Escolha o nome do projeto\
 Escolha a opção "Lambda Functions only"\
 `[?] Select your project type: Lambda Functions only : > Lambda Functions only `
 
-### Entre na pasta do projeto Chalice: 
+### Entre na pasta do projeto Chalice:
 
 `cd Ecomm`
 
 Para "compilar" o arquivo, na verdade registra as nossas funções nos serviços AWS\
 `chalice-local deploy`
 
-### Rode o comando invoke para executar uma função: 
+### Rode o comando invoke para executar uma função:
 Para ver o retorno da função no terminal:\
-`chalice-local invoke -n first_function`
+`chalice-local invoke -n first_function`\
 
 Você verá o retorno da função no terminal:\
 `{"hello": "world"}`
@@ -99,7 +99,7 @@ Para exibir as tabelas que temos
 
 Criar a tabela de pedidos
 ```sql
-CREATE TABLE orders ( 
+CREATE TABLE orders (
 id SERIAL PRIMARY KEY,
 status VARCHAR(20) NOT NULL,
 user_id INTEGER NOT NULL,
@@ -111,7 +111,7 @@ items INTEGER[] NOT NULL
 
 Criar a tabela de items
 ```sql
-CREATE TABLE items ( 
+CREATE TABLE items (
 id SERIAL PRIMARY KEY,
 nome VARCHAR(20) NOT NULL
 );
@@ -119,7 +119,7 @@ nome VARCHAR(20) NOT NULL
 
 Criar a tabela de users
 ```sql
-CREATE TABLE users ( 
+CREATE TABLE users (
 id SERIAL PRIMARY KEY,
 nome VARCHAR(40) NOT NULL
 );
@@ -311,8 +311,18 @@ Como filtrar os pedidos pelo nome de quem pediu
 SELECT orders.id, orders.status, orders.user_id, orders.items
 FROM orders
 JOIN users ON users.id = orders.user_id
-WHERE users.nome = 'Jonata';
+WHERE users.nome = 'Igor';
 ```
+
+Como filtrar os pedidos pelo nome de quem pediu, APARECENDO o nome dos itens pedidos
+```sql
+SELECT orders.id, orders.status, users.nome,
+       ARRAY(SELECT items.nome FROM items WHERE items.id = ANY(orders.items)) as item_nomes
+FROM orders
+JOIN users ON orders.user_id = users.id
+WHERE users.nome = 'Igor';
+```
+
 
 <br>
 
@@ -322,10 +332,10 @@ Como filtrar os pedidos pelo nome de quem pediu, fazendo que o nome do User venh
 SELECT orders.id, orders.status, users.nome AS user_nome, orders.items
 FROM orders
 JOIN users ON users.id = orders.user_id
-WHERE users.nome = 'Jonata';
+WHERE users.nome = 'Igor';
 ```
 
-# 3 - Como testar a API: 
+# 3 - Como testar a API:
 
 ### POST
 
@@ -370,7 +380,7 @@ WHERE users.nome = 'Jonata';
 
 <br>
 
-### UPDATE 
+### UPDATE
 `https://2v3qgzz3sn.execute-api.localhost.localstack.cloud:4566/api/order`
 
 #### BODY:
@@ -403,7 +413,3 @@ Para logar nos serviços pagos da Localsatck\
 
 
 _______________________________Bloco de notas (depois apagaremos)________________________________________
-
-
-
-
