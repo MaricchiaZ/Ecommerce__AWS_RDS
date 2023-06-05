@@ -70,6 +70,7 @@ def get_order_name(event, context):
 #     conn.close()
 #     return {"new order": "pedido cadastrado com sucesso"}
 
+@app.lambda_function()
 def new_order(event, context):  # itens, user
     id_do_usuario = event['nome']
     status = "PROCESSANDO"
