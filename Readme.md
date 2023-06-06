@@ -414,4 +414,4 @@ Para logar nos serviços pagos da Localsatck\
 `export LOCALSTACK_API_KEY=sua_key`  Essa key você pega na sua página de usuário da localstak
 
 
-_______________________________Bloco de notas (depois apagaremos)________________________________________
+_______________________________Bloco de notas (para testes de códigos)________________________________________
