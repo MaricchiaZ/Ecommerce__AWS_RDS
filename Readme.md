@@ -9,7 +9,7 @@ Fazer um sistema de e-commerce com itens, clientes (com dados), pedidos e status
 Estamos nos aventurando pelo mundo do AWS_SAM por demanda do Labs42_jan23 em parceria com o Itaú.
 Projeto feito pela equipe: Welton (wleite), Gabriel (gissao-m) e Maria Clara (maclara-).
 
-_________________________________________ COMO FIZEMOS O PROJETO: ________________________________________
+_________________________________________     COMO FIZEMOS O PROJETO:     ______________________________________________
 
 ### Pré-requisito:
 
